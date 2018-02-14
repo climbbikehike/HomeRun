@@ -10,8 +10,10 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.app.Activity;
+import android.app.AlertDialog;
 
 import android.content.Intent;
+import android.content.DialogInterface;
 import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
@@ -360,10 +362,23 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 // TODO: Add logout button here.
                 mActivity.startActivity(new Intent(mActivity, LoggedInActivity.class));
             } else {
-                // Right now, it shows "incorrect password".
-                // Ideally, create an alert box.
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
+                // If username and/or password mismatches, display an error dialog.
+                AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(mActivity);
+
+                dlgAlert.setMessage("Wrong Password or Username");
+                dlgAlert.setTitle("Invalid Credentials");
+                dlgAlert.setPositiveButton("OK", null);
+                dlgAlert.setCancelable(true);
+                dlgAlert.create().show();
+
+                dlgAlert.setPositiveButton("Ok",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        });
+                // mPasswordView.setError(getString(R.string.error_incorrect_password));
+                // mPasswordView.requestFocus();
             }
         }
 
