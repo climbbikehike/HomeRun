@@ -131,6 +131,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mEmailView.setText("");
         mPasswordView.setText("");
         mPasswordView.clearFocus();
+
+        showProgress(false);
     }
 
     private void populateAutoComplete() {
@@ -379,13 +381,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         @Override
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
-            showProgress(false);
 
             if (success) {
                 // Go to a blank page if valid username/password.
                 // TODO: Add logout button here.
                 mActivity.startActivity(new Intent(mActivity, LoggedInActivity.class));
             } else {
+                showProgress(false);
                 // If username and/or password mismatches, display an error dialog.
                 AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(mActivity);
 
