@@ -24,6 +24,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".controllers.LoggedInActivity"></activity>
+        <activity android:name=".controllers.RegPage"></activity>
     </application>
 
 </manifest>
