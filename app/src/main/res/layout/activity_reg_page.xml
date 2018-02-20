@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.android.homerun.controllers.RegPage">
+    tools:context="com.example.android.homerun.controllers.RegistrationActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,13 +19,21 @@
 
         <!-- Login progress -->
 
+        <ProgressBar
+            android:id="@+id/register_progress"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:visibility="gone" />
+
         <ScrollView
-            android:id="@+id/login_form"
+            android:id="@+id/register_form"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <LinearLayout
-                android:id="@+id/reg_page_form"
+                android:id="@+id/regpage_form"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
@@ -54,8 +62,8 @@
                         android:id="@+id/regpage_username"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/Username"
                         android:layout_margin="10dp"
+                        android:hint="@string/Username"
                         android:inputType="text"
                         android:maxLines="1"
                         android:singleLine="true" />
@@ -70,8 +78,8 @@
                         android:id="@+id/regpage_password"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/password"
                         android:layout_margin="10dp"
+                        android:hint="@string/password"
                         android:inputType="textPassword"
                         android:maxLines="1"
                         android:singleLine="true" />
@@ -83,14 +91,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
-                    android:text="Choose Account Type" />
+                    android:text="@string/choose_account_type" />
 
                 <Spinner
                     android:id="@+id/user_admin_spinner"
                     android:layout_width="match_parent"
-                    android:layout_margin="10dp"
                     android:layout_height="42dp"
-                    android:entries="@array/user_admin_spinner_list" />
+                    android:layout_margin="10dp" />
 
                 <Button
                     android:id="@+id/regpage_register_button"
@@ -105,8 +112,8 @@
                     android:id="@+id/regpage_cancel_button"
                     style="@style/Widget.AppCompat.Button.Colored"
                     android:layout_width="match_parent"
-                    android:layout_margin="10dp"
                     android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
                     android:layout_marginTop="16dp"
                     android:backgroundTint="@android:color/holo_red_light"
                     android:text="@android:string/cancel"

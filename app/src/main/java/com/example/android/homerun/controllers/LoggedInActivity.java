@@ -19,12 +19,8 @@ public class LoggedInActivity extends AppCompatActivity {
         logout_button.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                returntoStart();
+                finish();
             }
         });
-    }
-
-    private void returntoStart() {
-        startActivity(new Intent(LoggedInActivity.this, LoginActivity.class));
     }
 }
