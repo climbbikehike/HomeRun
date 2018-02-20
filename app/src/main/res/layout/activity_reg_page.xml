@@ -35,7 +35,7 @@
                     android:layout_height="match_parent">
 
                     <AutoCompleteTextView
-                        android:id="@+id/name"
+                        android:id="@+id/regpage_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
@@ -51,7 +51,7 @@
                     android:layout_height="match_parent">
 
                     <AutoCompleteTextView
-                        android:id="@+id/username"
+                        android:id="@+id/regpage_username"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/Username"
@@ -66,8 +66,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <AutoCompleteTextView
-                        android:id="@+id/password"
+                    <EditText
+                        android:id="@+id/regpage_password"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/password"
