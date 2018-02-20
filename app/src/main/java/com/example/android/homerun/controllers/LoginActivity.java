@@ -7,13 +7,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.app.Activity;
 import android.app.AlertDialog;
 
-import android.content.Intent;
 import android.content.DialogInterface;
 import android.content.CursorLoader;
 import android.content.Loader;
@@ -37,11 +35,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.android.homerun.R;
+import com.example.android.homerun.model.DataHolder;
+import com.example.android.homerun.model.User;
+import com.example.android.homerun.model.AccountType;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static android.Manifest.permission.READ_CONTACTS;
 
 /**
  * A login screen that offers login via email/password.
@@ -122,6 +121,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
+        // Sample user:
+        DataHolder.addUser(new User("Prabhav", "user", "pass", AccountType.ADMIN));
     }
 
     @Override
@@ -366,11 +368,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 return false;
             }
 
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
+            for (User user : DataHolder.getUsers()) {
+                if (user.getId().equals(mEmail)) {
                     // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
+                    return user.getPassword().equals(mPassword);
                 }
             }
             return false;
