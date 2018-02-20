@@ -5,6 +5,7 @@
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password (optional)</string>
     <string name="action_sign_in">Sign in or register</string>
+    <string name="action_register">Register</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
@@ -14,8 +15,15 @@
         completions."
     </string>
     <string name="title_activity_logged_in">LoggedInActivity</string>
+    <string name="Name">Name</string>
     <string name="Username">Username</string>
     <string name="password">Password</string>
     <string name="LogOut">Log Out</string>
     <string name="register">Don\'t Have an Account? Register Now</string>
+
+    <!-- List for User/Admin Spinner on RegPage -->
+    <string-array name="user_admin_spinner_list">
+        <item>User</item>
+        <item>Admin</item>
+    </string-array>
 </resources>
