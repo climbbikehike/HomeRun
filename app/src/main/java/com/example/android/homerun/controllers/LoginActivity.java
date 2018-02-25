@@ -42,7 +42,6 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executor;
 
 /**
  * A login screen that offers login via username/password.
@@ -368,7 +367,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                             if (task.isSuccessful()) {
                                 // Sign in success, update UI with the signed-in user's information
-                                // FirebaseUser user = mFirebaseAuth.getCurrentUser();
                                 LoginActivity.this.startActivity(new Intent(LoginActivity.this, LoggedInActivity.class));
                             } else {
                                 showProgress(false);

@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -26,8 +27,6 @@ import com.example.android.homerun.model.UtilityMethods;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
-
-import java.util.concurrent.Executor;
 
 public class RegistrationActivity extends AppCompatActivity {
 
@@ -206,7 +205,6 @@ public class RegistrationActivity extends AppCompatActivity {
 
                             if (task.isSuccessful()) {
                                 // Alert user and go to sign-in page
-                                // DataHolder.addUser(user);
                                 // Reset values
                                 mNameView.setText("");
                                 mUsernameView.setText("");
@@ -221,8 +219,15 @@ public class RegistrationActivity extends AppCompatActivity {
                                                 finish();
                                             }
                                         });
+
+                                user.setId(FirebaseWrapper.mFirebaseAuth.getCurrentUser().getUid());
+                                FirebaseWrapper.mFirebaseDatabase.getReference()
+                                        .child("users")
+                                        .child(user.getId())
+                                        .setValue(user);
                             } else {
                                 // Alert user
+                                Log.e("Firebase", "Registration failed: " + task.getException().getMessage());
                                 dlgAlert.setMessage("Something went wrong. Please try again.");
                                 dlgAlert.setTitle("Registration Failed");
                                 dlgAlert.setPositiveButton("OK", null);
