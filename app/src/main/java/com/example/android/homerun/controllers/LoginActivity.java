@@ -33,13 +33,16 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.android.homerun.R;
-import com.example.android.homerun.model.DataHolder;
-import com.example.android.homerun.model.User;
-import com.example.android.homerun.model.AccountType;
+import com.example.android.homerun.model.FirebaseWrapper;
 import com.example.android.homerun.model.UtilityMethods;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executor;
 
 /**
  * A login screen that offers login via username/password.
@@ -126,6 +129,17 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = FirebaseWrapper.mFirebaseAuth.getCurrentUser();
+        if (currentUser != null) {
+            LoginActivity.this.startActivity(new Intent(LoginActivity.this, LoggedInActivity.class));
+        }
     }
 
     @Override
@@ -346,48 +360,34 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
+            FirebaseWrapper.mFirebaseAuth.signInWithEmailAndPassword(mUsername, mPassword)
+                    .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            mAuthTask = null;
 
-            try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
-            }
+                            if (task.isSuccessful()) {
+                                // Sign in success, update UI with the signed-in user's information
+                                // FirebaseUser user = mFirebaseAuth.getCurrentUser();
+                                LoginActivity.this.startActivity(new Intent(LoginActivity.this, LoggedInActivity.class));
+                            } else {
+                                showProgress(false);
+                                // If username and/or password mismatches, display an error dialog.
+                                mUsernameView.setText("");
+                                mPasswordView.setText("");
 
-            for (User user : DataHolder.getUsers()) {
-                if (user.getUsername().equals(mUsername)) {
-                    // Account exists, return true if the password matches.
-                    return user.getPassword().equals(mPassword);
-                }
-            }
+                                mUsernameView.requestFocus();
+                                AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(LoginActivity.this);
+
+                                dlgAlert.setMessage("Wrong Password or Username");
+                                dlgAlert.setTitle("Invalid Credentials");
+                                dlgAlert.setPositiveButton("OK", null);
+                                dlgAlert.create().show();
+                            }
+                        }
+                    });
+
             return false;
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            mAuthTask = null;
-
-            if (success) {
-                // Go to a blank page if valid username/password.
-                LoginActivity.this.startActivity(new Intent(LoginActivity.this, LoggedInActivity.class));
-            } else {
-                showProgress(false);
-                // If username and/or password mismatches, display an error dialog.
-                mUsernameView.setText("");
-                mPasswordView.setText("");
-
-                mUsernameView.requestFocus();
-                AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(LoginActivity.this);
-
-                dlgAlert.setMessage("Wrong Password or Username");
-                dlgAlert.setTitle("Invalid Credentials");
-                dlgAlert.setPositiveButton("OK", null);
-                dlgAlert.create().show();
-
-                // mPasswordView.setError(getString(R.string.error_incorrect_password));
-                // mPasswordView.requestFocus();
-            }
         }
 
         @Override

@@ -1,9 +1,9 @@
 package com.example.android.homerun.controllers;
 
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import com.example.android.homerun.R;
+import com.google.firebase.auth.FirebaseAuth;
 
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,6 +19,7 @@ public class LoggedInActivity extends AppCompatActivity {
         logout_button.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+                FirebaseAuth.getInstance().signOut();
                 finish();
             }
         });
