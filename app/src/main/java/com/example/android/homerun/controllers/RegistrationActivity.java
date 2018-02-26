@@ -222,12 +222,12 @@ public class RegistrationActivity extends AppCompatActivity {
 
                                 user.setId(FirebaseWrapper.mFirebaseAuth.getCurrentUser().getUid());
                                 FirebaseWrapper.mFirebaseDatabase.getReference()
-                                        .child("users")
+                                        .child(FirebaseWrapper.DATABASE_USERS)
                                         .child(user.getId())
                                         .setValue(user);
                             } else {
                                 // Alert user
-                                Log.e("Firebase", "Registration failed: " + task.getException().getMessage());
+                                Log.w("Firebase", "Registration failed." + task.getException().getMessage());
                                 dlgAlert.setMessage("Something went wrong. Please try again.");
                                 dlgAlert.setTitle("Registration Failed");
                                 dlgAlert.setPositiveButton("OK", null);

@@ -1,6 +1,10 @@
 package com.example.android.homerun.model;
 
-import java.util.regex.Matcher;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.regex.Pattern;
 
 /**
@@ -41,5 +45,38 @@ public class UtilityMethods {
             return false;
 
         return pat.matcher(name).matches();
+    }
+
+    public static void createShelterDatabase(InputStream inputStream) {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        try {
+            reader.readLine(); // Skip the first line
+            String csvLine;
+            while ((csvLine = reader.readLine()) != null) {
+                String[] row = csvLine.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
+
+                for (int i = 0; i < row.length; i++) {
+                    row[i] = row[i].trim().replaceAll("^\"|\"$", "");
+                }
+
+                Shelter shelter = new Shelter(row[0], row[1], row[2], row[3], row[4], row[5], row[6],
+                        row[7], row[8]);
+                FirebaseWrapper.mFirebaseDatabase.getReference()
+                        .child(FirebaseWrapper.DATABASE_SHELTERS)
+                        .child(shelter.getId())
+                        .setValue(shelter);
+            }
+        }
+        catch (IOException ex) {
+            throw new RuntimeException("Error in reading CSV file: "+ex);
+        }
+        finally {
+            try {
+                inputStream.close();
+            }
+            catch (IOException e) {
+                throw new RuntimeException("Error while closing input stream: "+e);
+            }
+        }
     }
 }

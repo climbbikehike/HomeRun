@@ -10,4 +10,7 @@ import com.google.firebase.database.FirebaseDatabase;
 public class FirebaseWrapper {
     public static FirebaseAuth mFirebaseAuth  = FirebaseAuth.getInstance();
     public static FirebaseDatabase mFirebaseDatabase = FirebaseDatabase.getInstance();
+
+    public static final String DATABASE_USERS = "users";
+    public static final String DATABASE_SHELTERS = "shelters";
 }
