@@ -23,7 +23,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".controllers.LoggedInActivity"></activity>
+        <activity android:name=".controllers.DashboardActivity"></activity>
         <activity android:name=".controllers.RegistrationActivity"></activity>
     </application>
 

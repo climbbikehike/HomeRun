@@ -1,5 +1,7 @@
 package com.example.android.homerun.controllers;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import com.example.android.homerun.R;
@@ -17,21 +19,22 @@ import com.google.firebase.database.ValueEventListener;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
 
 import java.io.InputStream;
 import java.util.ArrayList;
 
-public class LoggedInActivity extends AppCompatActivity {
+public class DashboardActivity extends AppCompatActivity {
+
+    private Button logout_button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_logged_in);
-        Button logout_button = (Button) findViewById(R.id.logout_button);
+
+        logout_button = (Button) findViewById(R.id.logout_button);
         logout_button.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -54,7 +57,7 @@ public class LoggedInActivity extends AppCompatActivity {
                     shelterList.add(shelterDataSnapshot.getValue(Shelter.class));
                 }
 
-                ArrayAdapter<Shelter> shelterAdapter = new ShelterAdapter(LoggedInActivity.this, shelterList);
+                ArrayAdapter<Shelter> shelterAdapter = new ShelterAdapter(DashboardActivity.this, shelterList);
 
                 /* ListView listView = (ListView) findViewById(R.id.list);
                 assert listView != null;
@@ -84,8 +87,17 @@ public class LoggedInActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onBackPressed()
-    {
+    public void onBackPressed() {
+        AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
 
+        dlgAlert.setMessage("Are you sure you want to logout?");
+        dlgAlert.setTitle("Logout Confirmation");
+        dlgAlert.setPositiveButton("OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        logout_button.performClick();
+                    }
+                });
+        dlgAlert.create().show();
     }
 }

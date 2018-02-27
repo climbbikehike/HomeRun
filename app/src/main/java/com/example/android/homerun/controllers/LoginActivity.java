@@ -137,7 +137,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
-            LoginActivity.this.startActivity(new Intent(LoginActivity.this, LoggedInActivity.class));
+            LoginActivity.this.startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
         }
     }
 
@@ -367,7 +367,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                             if (task.isSuccessful()) {
                                 // Sign in success, update UI with the signed-in user's information
-                                LoginActivity.this.startActivity(new Intent(LoginActivity.this, LoggedInActivity.class));
+                                LoginActivity.this.startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
                             } else {
                                 showProgress(false);
                                 // If username and/or password mismatches, display an error dialog.
