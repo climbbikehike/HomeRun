@@ -22,4 +22,5 @@
     <string name="LogOut">Log Out</string>
     <string name="register">Don\'t Have an Account? Register Now</string>
     <string name="choose_account_type">Choose Account Type</string>
+    <string name="shelter">Shelters</string>
 </resources>
