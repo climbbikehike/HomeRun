@@ -33,11 +33,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.android.homerun.R;
-import com.example.android.homerun.model.FirebaseWrapper;
 import com.example.android.homerun.model.UtilityMethods;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
@@ -135,7 +135,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         super.onStart();
 
         // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = FirebaseWrapper.mFirebaseAuth.getCurrentUser();
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
             LoginActivity.this.startActivity(new Intent(LoginActivity.this, LoggedInActivity.class));
         }
@@ -359,7 +359,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            FirebaseWrapper.mFirebaseAuth.signInWithEmailAndPassword(mUsername, mPassword)
+            FirebaseAuth.getInstance().signInWithEmailAndPassword(mUsername, mPassword)
                     .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
