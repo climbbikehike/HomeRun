@@ -34,7 +34,7 @@ public class LoggedInActivity extends AppCompatActivity {
         });
 
         DatabaseReference shelterRef = FirebaseWrapper.mFirebaseDatabase.getReference()
-                .child("shelters");
+                .child(FirebaseWrapper.DATABASE_SHELTERS);
         ValueEventListener eventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
