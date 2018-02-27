@@ -8,10 +8,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
+
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -21,9 +24,12 @@ import android.widget.Spinner;
 
 import com.example.android.homerun.R;
 import com.example.android.homerun.model.AccountType;
-import com.example.android.homerun.model.DataHolder;
+import com.example.android.homerun.model.FirebaseWrapper;
 import com.example.android.homerun.model.User;
 import com.example.android.homerun.model.UtilityMethods;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 
 public class RegistrationActivity extends AppCompatActivity {
 
@@ -197,50 +203,51 @@ public class RegistrationActivity extends AppCompatActivity {
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // TODO: attempt registration against a network service.
+            FirebaseWrapper.mFirebaseAuth.createUserWithEmailAndPassword(user.getUsername(), user.getPassword())
+                    .addOnCompleteListener(RegistrationActivity.this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            mRegisterTask = null;
+                            showProgress(false);
 
-            try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
-            }
+                            AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(RegistrationActivity.this);
+
+                            if (task.isSuccessful()) {
+                                // Alert user and go to sign-in page
+                                // Reset values
+                                mNameView.setText("");
+                                mUsernameView.setText("");
+                                mPasswordView.setText("");
+                                mAccountView.setSelection(0);
+
+                                dlgAlert.setMessage("You have successfully registered. You will be logged in now.");
+                                dlgAlert.setTitle("Registration Successful");
+                                dlgAlert.setPositiveButton("OK",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                finish();
+                                            }
+                                        });
+
+                                user.setId(FirebaseWrapper.mFirebaseAuth.getCurrentUser().getUid());
+                                FirebaseWrapper.mFirebaseDatabase.getReference()
+                                        .child(FirebaseWrapper.DATABASE_USERS)
+                                        .child(user.getId())
+                                        .setValue(user);
+                            } else {
+                                // Alert user
+                                Log.w("Firebase", "Registration failed." + task.getException().getMessage());
+                                dlgAlert.setMessage("Something went wrong. Please try again.");
+                                dlgAlert.setTitle("Registration Failed");
+                                dlgAlert.setPositiveButton("OK", null);
+                            }
+
+                            dlgAlert.create().show();
+                        }
+                    });
 
             // TODO: ensure this user doesn't exist already
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            mRegisterTask = null;
-            showProgress(false);
-
-            AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(RegistrationActivity.this);
-
-            if (success) {
-                // Alert user and go to sign-in page
-                DataHolder.addUser(user);
-                // Reset values
-                mNameView.setText("");
-                mUsernameView.setText("");
-                mPasswordView.setText("");
-                mAccountView.setSelection(0);
-
-                dlgAlert.setMessage("You have successfully registered. You will be re-directed to the log-in screen.");
-                dlgAlert.setTitle("Registration Successful");
-                dlgAlert.setPositiveButton("OK",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                finish();
-                            }
-                        });
-            } else {
-                // Alert user
-                dlgAlert.setMessage("Something went wrong. Please try again.");
-                dlgAlert.setTitle("Registration Failed");
-                dlgAlert.setPositiveButton("OK", null);
-            }
-            dlgAlert.create().show();
+            return false;
         }
 
         @Override

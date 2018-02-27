@@ -9,6 +9,11 @@ public class User {
     private String username;
     private String password;
     private AccountType accountType;
+    private String id;
+
+    public User() {
+        // Default constructor required for calls to DataSnapshot.getValue(User.class)
+    }
 
     public User(String name, String username, String password, AccountType accountType) {
         this.name = name;
@@ -21,4 +26,7 @@ public class User {
     public String getUsername() {return username;}
     public String getPassword() {return password;}
     public AccountType getAccountType() {return accountType;}
+    public String getId() {return id;}
+
+    public void setId(String id) {this.id = id;}
 }
