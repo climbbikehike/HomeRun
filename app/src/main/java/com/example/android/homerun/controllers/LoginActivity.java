@@ -35,7 +35,6 @@ import android.widget.TextView;
 import com.example.android.homerun.R;
 import com.example.android.homerun.model.DataHolder;
 import com.example.android.homerun.model.User;
-import com.example.android.homerun.model.AccountType;
 import com.example.android.homerun.model.UtilityMethods;
 
 import java.util.ArrayList;
