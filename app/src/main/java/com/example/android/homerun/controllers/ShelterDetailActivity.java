@@ -23,7 +23,7 @@ public class ShelterDetailActivity extends AppCompatActivity {
         setTitle(current.getName());
 
         String name = current.getName();
-        AutoCompleteTextView shelter_name_widget = findViewById(R.id.shelter_detail_view_name);
+        TextView shelter_name_widget = findViewById(R.id.shelter_detail_view_name);
         shelter_name_widget.setText(name);
 
         String capacity = current.getCapacity();
