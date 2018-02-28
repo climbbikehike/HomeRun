@@ -6,32 +6,17 @@
     android:layout_height="match_parent"
     tools:context="com.example.android.homerun.controllers.DashboardActivity">
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="259dp"
-        android:layout_height="46dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="216dp"
-        android:text=" App Coming Soon"
-        android:textAlignment="center"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/logout_button"
-        android:layout_width="179dp"
-        android:layout_height="53dp"
+    <ListView
+        android:id="@+id/shelter_list"
+        android:layout_width="385dp"
+        android:layout_height="676dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="@string/LogOut"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2"
-        app:layout_constraintVertical_bias="0.256" />
+        app:layout_constraintTop_toTopOf="parent" />
+
 </android.support.constraint.ConstraintLayout>
