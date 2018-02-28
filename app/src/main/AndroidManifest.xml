@@ -25,6 +25,7 @@
         </activity>
         <activity android:name=".controllers.DashboardActivity"></activity>
         <activity android:name=".controllers.RegistrationActivity"></activity>
+        <activity android:name=".controllers.ShelterDetailView"></activity>
     </application>
 
 </manifest>
