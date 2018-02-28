@@ -19,8 +19,11 @@ import com.google.firebase.database.ValueEventListener;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -32,16 +35,14 @@ public class DashboardActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Window w = getWindow();
+        w.setTitle("Dashboard");
         setContentView(R.layout.activity_logged_in);
 
-        logout_button = (Button) findViewById(R.id.logout_button);
-        logout_button.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FirebaseAuth.getInstance().signOut();
-                finish();
-            }
-        });
+        final ListView shelter_list = (ListView)findViewById(R.id.shelter_list);
+        TextView emptyText = (TextView)findViewById(android.R.id.empty);
+        shelter_list.setEmptyView(emptyText);
+
 
         DatabaseReference shelterRef = FirebaseDatabase.getInstance().getReference()
                 .child(FirebaseWrapper.DATABASE_SHELTERS);
@@ -58,6 +59,7 @@ public class DashboardActivity extends AppCompatActivity {
                 }
 
                 ArrayAdapter<Shelter> shelterAdapter = new ShelterAdapter(DashboardActivity.this, shelterList);
+                shelter_list.setAdapter(shelterAdapter);
 
                 /* ListView listView = (ListView) findViewById(R.id.list);
                 assert listView != null;
@@ -95,7 +97,8 @@ public class DashboardActivity extends AppCompatActivity {
         dlgAlert.setPositiveButton("OK",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        logout_button.performClick();
+                        FirebaseAuth.getInstance().signOut();
+                        finish();
                     }
                 });
         dlgAlert.create().show();
