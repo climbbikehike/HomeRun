@@ -1,10 +1,11 @@
 package com.example.android.homerun.model;
+import java.io.Serializable;
 
 /**
  * Created by PC on 2/25/18.
  */
 
-public class Shelter {
+public class Shelter implements Serializable {
     private String id;
     private String name;
     private String capacity;
