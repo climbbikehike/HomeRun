@@ -1,6 +1,8 @@
 package com.example.android.homerun.model;
 
 
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -59,9 +61,9 @@ public class UtilityMethods {
                     row[i] = row[i].trim().replaceAll("^\"|\"$", "");
                 }
 
-                Shelter shelter = new Shelter(row[0], row[1], row[2], row[3], row[4], row[5], row[6],
-                        row[7], row[8]);
-                FirebaseWrapper.mFirebaseDatabase.getReference()
+                Shelter shelter = new Shelter(row[0], row[1], row[2], row[3], Double.parseDouble(row[4]),
+                        Double.parseDouble(row[5]), row[6], row[7], row[8]);
+                FirebaseDatabase.getInstance().getReference()
                         .child(FirebaseWrapper.DATABASE_SHELTERS)
                         .child(shelter.getId())
                         .setValue(shelter);

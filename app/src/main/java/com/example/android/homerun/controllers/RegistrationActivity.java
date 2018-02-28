@@ -30,6 +30,8 @@ import com.example.android.homerun.model.UtilityMethods;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class RegistrationActivity extends AppCompatActivity {
 
@@ -203,7 +205,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            FirebaseWrapper.mFirebaseAuth.createUserWithEmailAndPassword(user.getUsername(), user.getPassword())
+            FirebaseAuth.getInstance().createUserWithEmailAndPassword(user.getUsername(), user.getPassword())
                     .addOnCompleteListener(RegistrationActivity.this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
@@ -229,8 +231,8 @@ public class RegistrationActivity extends AppCompatActivity {
                                             }
                                         });
 
-                                user.setId(FirebaseWrapper.mFirebaseAuth.getCurrentUser().getUid());
-                                FirebaseWrapper.mFirebaseDatabase.getReference()
+                                user.setId(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                                FirebaseDatabase.getInstance().getReference()
                                         .child(FirebaseWrapper.DATABASE_USERS)
                                         .child(user.getId())
                                         .setValue(user);

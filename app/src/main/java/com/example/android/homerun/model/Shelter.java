@@ -9,8 +9,8 @@ public class Shelter {
     private String name;
     private String capacity;
     private String restrictions;
-    private String longitude;
-    private String latitude;
+    private double longitude;
+    private double latitude;
     private String address;
     private String specialNotes;
     private String phoneNumber;
@@ -36,11 +36,11 @@ public class Shelter {
         return restrictions;
     }
 
-    public String getLongitude() {
+    public double getLongitude() {
         return longitude;
     }
 
-    public String getLatitude() {
+    public double getLatitude() {
         return latitude;
     }
 
@@ -56,7 +56,7 @@ public class Shelter {
         return phoneNumber;
     }
 
-    public Shelter(String id, String name, String capacity, String restrictions, String longitude, String latitude, String address, String specialNotes, String phoneNumber) {
+    public Shelter(String id, String name, String capacity, String restrictions, double longitude, double latitude, String address, String specialNotes, String phoneNumber) {
         this.id = id;
         this.name = name;
         this.capacity = capacity;

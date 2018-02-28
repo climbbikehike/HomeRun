@@ -23,8 +23,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".controllers.LoggedInActivity" />
-        <activity android:name=".controllers.RegistrationActivity" />
+        <activity android:name=".controllers.DashboardActivity"></activity>
+        <activity android:name=".controllers.RegistrationActivity"></activity>
         <activity android:name=".controllers.ShelterDetailView"></activity>
     </application>
 
