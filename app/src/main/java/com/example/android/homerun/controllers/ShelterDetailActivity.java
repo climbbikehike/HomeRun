@@ -11,14 +11,16 @@ import com.example.android.homerun.R;
 import com.example.android.homerun.model.Shelter;
 
 
-public class ShelterDetailView extends AppCompatActivity {
+public class ShelterDetailActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_shelter_detail_view);
+        setContentView(R.layout.activity_shelter_detail);
 
         Shelter current = (Shelter) getIntent().getSerializableExtra("ShelterData");
+
+        setTitle(current.getName());
 
         String name = current.getName();
         AutoCompleteTextView shelter_name_widget = findViewById(R.id.shelter_detail_view_name);

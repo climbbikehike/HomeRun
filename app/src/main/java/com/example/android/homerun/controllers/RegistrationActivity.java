@@ -51,7 +51,7 @@ public class RegistrationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_reg_page);
+        setContentView(R.layout.activity_registration);
 
         // Set up the login form.
         mUsernameView = (AutoCompleteTextView) findViewById(R.id.regpage_username);
@@ -125,10 +125,14 @@ public class RegistrationActivity extends AppCompatActivity {
             mUsernameView.setError(getString(R.string.error_field_required));
             focusView = mUsernameView;
             cancel = true;
-        } else if (!UtilityMethods.isUsernameValid(username)) {
-            mUsernameView.setError(getString(R.string.error_invalid_username));
-            focusView = mUsernameView;
-            cancel = true;
+        } else if (!UtilityMethods.isEmailValid(username)) {
+            if (UtilityMethods.isUsernameValid(username)) {
+                username += "@homerun.com";
+            } else {
+                mUsernameView.setError(getString(R.string.error_invalid_username));
+                focusView = mUsernameView;
+                cancel = true;
+            }
         }
 
         // Check for valid name.

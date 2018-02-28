@@ -15,12 +15,10 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing username
         completions."
     </string>
-    <string name="title_activity_logged_in">LoggedInActivity</string>
     <string name="Name">Name</string>
     <string name="Username">Username</string>
     <string name="password">Password</string>
-    <string name="LogOut">Log Out</string>
+    <string name="LogOut">Logout</string>
     <string name="register">Don\'t Have an Account? Register Now</string>
     <string name="choose_account_type">Choose Account Type</string>
-    <string name="shelter">Shelters</string>
 </resources>

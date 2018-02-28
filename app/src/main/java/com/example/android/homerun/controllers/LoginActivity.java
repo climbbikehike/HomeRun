@@ -234,10 +234,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mUsernameView.setError(getString(R.string.error_field_required));
             focusView = mUsernameView;
             cancel = true;
-        } else if (!UtilityMethods.isUsernameValid(username)) {
-            mUsernameView.setError(getString(R.string.error_invalid_username));
-            focusView = mUsernameView;
-            cancel = true;
+        } else if (!UtilityMethods.isEmailValid(username)) {
+            if (UtilityMethods.isUsernameValid(username)) {
+                username += "@homerun.com";
+            } else {
+                mUsernameView.setError(getString(R.string.error_invalid_username));
+                focusView = mUsernameView;
+                cancel = true;
+            }
         }
 
         if (cancel) {

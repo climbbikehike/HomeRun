@@ -16,15 +16,27 @@ import java.util.regex.Pattern;
 public class UtilityMethods {
 
     // From https://www.geeksforgeeks.org/check-email-address-valid-not-java/
-    private static final String USERNAME_REGEX = "^[\\p{L}0-9_+&*-]+(?:\\."+
+    private static final String EMAIL_REGEX = "^[\\p{L}0-9_+&*-]+(?:\\."+
             "[\\p{L}0-9_+&*-]+)*@" +
             "(?:[\\p{L}0-9-]+\\.)+[\\p{L}]{2,7}$";
+
+    // Similar to above
+    private static final String USERNAME_REGEX = "^[\\p{L}0-9_+&*-]+(?:\\."+
+            "[\\p{L}0-9_+&*-]+)*$";
 
     // No whitespaces and at-least 6 characters:
     private static final String PASSWORD_REGEX = "^(?=\\S+$).{6,}$";
 
     // Letters from any language and some special characters:
     private static final String NAME_REGEX = "^[\\p{L} .'-]+$";
+
+    public static boolean isEmailValid(String email) {
+        Pattern pat = Pattern.compile(EMAIL_REGEX);
+        if (email == null)
+            return false;
+
+        return pat.matcher(email).matches();
+    }
 
     public static boolean isUsernameValid(String username) {
         Pattern pat = Pattern.compile(USERNAME_REGEX);
