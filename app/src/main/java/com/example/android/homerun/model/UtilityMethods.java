@@ -73,8 +73,9 @@ public class UtilityMethods {
                     row[i] = row[i].trim().replaceAll("^\"|\"$", "");
                 }
 
-                Shelter shelter = new Shelter(row[0], row[1], row[2], row[3], Double.parseDouble(row[4]),
-                        Double.parseDouble(row[5]), row[6], row[7], row[8]);
+                Shelter shelter = new Shelter(row[0], row[1], row[2].isEmpty() ? "N/A" : row[2],
+                        row[3], Double.parseDouble(row[4]), Double.parseDouble(row[5]), row[6],
+                        row[7], row[8]);
                 FirebaseDatabase.getInstance().getReference()
                         .child(FirebaseWrapper.DATABASE_SHELTERS)
                         .child(shelter.getId())
