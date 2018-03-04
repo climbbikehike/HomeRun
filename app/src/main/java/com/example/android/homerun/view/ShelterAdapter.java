@@ -13,9 +13,10 @@ import android.widget.TextView;
 import com.example.android.homerun.R;
 import com.example.android.homerun.model.Shelter;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Comparator;
+
+import me.xdrop.fuzzywuzzy.FuzzySearch;
 
 /**
  * Created by PC on 2/27/18.
@@ -64,8 +65,8 @@ public class ShelterAdapter extends ArrayAdapter<Shelter> implements Filterable 
             }
 
             @Override
-            protected FilterResults performFiltering(CharSequence constraint) {
-                FilterResults results = new FilterResults();        // Holds the results of a filtering operation in values
+            protected FilterResults performFiltering(final CharSequence constraint) {
+                final FilterResults results = new FilterResults();        // Holds the results of a filtering operation in values
                 ArrayList<Shelter> filteredArrList = new ArrayList();
 
                 if (originalList == null) {
@@ -84,13 +85,43 @@ public class ShelterAdapter extends ArrayAdapter<Shelter> implements Filterable 
                     results.count = originalList.size();
                     results.values = originalList;
                 } else {
-                    constraint = constraint.toString().toLowerCase();
+                    final String constraint_string = constraint.toString().toLowerCase();
+                    assert constraint_string.isEmpty() == false;
+
                     for (int i = 0; i < originalList.size(); i++) {
-                        String data = originalList.get(i).getName();
-                        if (data.toLowerCase().startsWith(constraint.toString())) {
+                        String data = originalList.get(i).getName().toLowerCase();
+
+                        if (data.startsWith(constraint_string) ||
+                                FuzzySearch.tokenSetRatio(constraint_string, data) >= 45) {
                             filteredArrList.add(originalList.get(i));
                         }
                     }
+
+                    filteredArrList.sort(new Comparator<Shelter>() {
+                        @Override
+                        public int compare(Shelter s1, Shelter s2) {
+                            String s1_name = s1.getName().toLowerCase();
+                            String s2_name = s2.getName().toLowerCase();
+
+                            if (s1_name.startsWith(constraint_string)) {
+                                if (!s2_name.startsWith(constraint_string)) {
+                                    return -1;
+                                }
+                                return s1_name.compareTo(s2_name);
+                            }
+                            else if (s2_name.startsWith(constraint_string)) {
+                                return 1;
+                            }
+
+                            int diff = FuzzySearch.tokenSetRatio(constraint_string, s2_name) -
+                                    FuzzySearch.tokenSetRatio(constraint_string, s1_name);
+                            if (diff == 0) {
+                                return s1_name.compareTo(s2_name);
+                            }
+                            return diff;
+                        }
+                    });
+
                     // set the Filtered result to return
                     results.count = filteredArrList.size();
                     results.values = filteredArrList;

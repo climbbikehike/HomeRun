@@ -117,8 +117,6 @@ public class DashboardActivity extends AppCompatActivity {
             }
         };
         shelterRef.addListenerForSingleValueEvent(eventListener);
-
-
     }
 
     @Override
