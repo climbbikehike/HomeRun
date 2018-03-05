@@ -33,6 +33,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.android.homerun.R;
+import com.example.android.homerun.model.FirebaseConstants;
 import com.example.android.homerun.model.UtilityMethods;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -236,7 +237,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             cancel = true;
         } else if (!UtilityMethods.isEmailValid(username)) {
             if (UtilityMethods.isUsernameValid(username)) {
-                username += "@homerun.com";
+                username += FirebaseConstants.EMAIL_DOMAIN;
             } else {
                 mUsernameView.setError(getString(R.string.error_invalid_username));
                 focusView = mUsernameView;

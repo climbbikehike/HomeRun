@@ -24,7 +24,7 @@ import android.widget.Spinner;
 
 import com.example.android.homerun.R;
 import com.example.android.homerun.model.AccountType;
-import com.example.android.homerun.model.FirebaseWrapper;
+import com.example.android.homerun.model.FirebaseConstants;
 import com.example.android.homerun.model.User;
 import com.example.android.homerun.model.UtilityMethods;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -127,7 +127,7 @@ public class RegistrationActivity extends AppCompatActivity {
             cancel = true;
         } else if (!UtilityMethods.isEmailValid(username)) {
             if (UtilityMethods.isUsernameValid(username)) {
-                username += "@homerun.com";
+                username += FirebaseConstants.EMAIL_DOMAIN;
             } else {
                 mUsernameView.setError(getString(R.string.error_invalid_username));
                 focusView = mUsernameView;
@@ -237,7 +237,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
                                 user.setId(FirebaseAuth.getInstance().getCurrentUser().getUid());
                                 FirebaseDatabase.getInstance().getReference()
-                                        .child(FirebaseWrapper.DATABASE_USERS)
+                                        .child(FirebaseConstants.DATABASE_USERS)
                                         .child(user.getId())
                                         .setValue(user);
                             } else {

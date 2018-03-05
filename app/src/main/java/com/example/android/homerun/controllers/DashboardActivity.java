@@ -1,12 +1,17 @@
 package com.example.android.homerun.controllers;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import com.example.android.homerun.R;
-import com.example.android.homerun.model.FirebaseWrapper;
+import com.example.android.homerun.model.FirebaseConstants;
+import com.example.android.homerun.model.FilterCategories;
 import com.example.android.homerun.model.Shelter;
 import com.example.android.homerun.model.UtilityMethods;
 import com.example.android.homerun.view.ShelterAdapter;
@@ -17,18 +22,29 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.io.InputStream;
 import java.util.ArrayList;
 
 public class DashboardActivity extends AppCompatActivity {
+
+    private View mProgressView;
+    private ListView mListView;
+    private EditText mEditTextView;
+    private Spinner mFilterCategories;
+    private View mView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +53,18 @@ public class DashboardActivity extends AppCompatActivity {
 
         setTitle("Shelters");
 
+        mProgressView = findViewById(R.id.dashboard_progress);
+        mListView = (ListView) findViewById(R.id.shelter_list);
+        mEditTextView = (EditText) findViewById(R.id.filter_string);
+        mFilterCategories = (Spinner) findViewById(R.id.filter_category_spinner);
+        mView = findViewById(R.id.filter_layout);
+
+        final Toast mToastToShow = Toast.makeText(getApplicationContext(),"Login successful. Fetching Data.", Toast.LENGTH_LONG);
+        mToastToShow.show();
+        showProgress(true);
+
         DatabaseReference shelterRef = FirebaseDatabase.getInstance().getReference()
-                .child(FirebaseWrapper.DATABASE_SHELTERS);
+                .child(FirebaseConstants.DATABASE_SHELTERS);
         ValueEventListener eventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -51,12 +77,11 @@ public class DashboardActivity extends AppCompatActivity {
                     shelterList.add(shelterDataSnapshot.getValue(Shelter.class));
                 }
 
-                ArrayAdapter<Shelter> shelterAdapter = new ShelterAdapter(DashboardActivity.this, shelterList);
+                final ShelterAdapter shelterAdapter = new ShelterAdapter(DashboardActivity.this, shelterList);
 
-                ListView listView = (ListView) findViewById(R.id.shelter_list);
-                assert listView != null;
-                listView.setAdapter(shelterAdapter);
-                listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+                assert mListView != null;
+                mListView.setAdapter(shelterAdapter);
+                mListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
                 {
                     @Override
                     public void onItemClick(AdapterView<?> adapter, View v, int position,
@@ -68,6 +93,30 @@ public class DashboardActivity extends AppCompatActivity {
                         startActivity(intent);
                     }
                 });
+
+                // Add Text Change Listener to EditText
+                mEditTextView.addTextChangedListener(new TextWatcher() {
+
+                    @Override
+                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        // Call back the Adapter with current character to Filter
+                        shelterAdapter.setSearchCategory((FilterCategories) mFilterCategories.getSelectedItem());
+                        shelterAdapter.getFilter().filter(s.toString());
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable editable) {
+
+                    }
+                });
+
+                mToastToShow.cancel();
+                showProgress(false);
             }
 
             @Override
@@ -76,6 +125,10 @@ public class DashboardActivity extends AppCompatActivity {
             }
         };
         shelterRef.addListenerForSingleValueEvent(eventListener);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter(this,android.R.layout.simple_spinner_item, FilterCategories.values());
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mFilterCategories.setAdapter(adapter);
     }
 
     @Override
@@ -111,5 +164,51 @@ public class DashboardActivity extends AppCompatActivity {
             finish();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Shows the progress UI and hides the login form.
+     */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+    private void showProgress(final boolean show) {
+        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
+        // for very easy animations. If available, use these APIs to fade-in
+        // the progress spinner.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+
+            mListView.setVisibility(show ? View.GONE : View.VISIBLE);
+            mListView.animate().setDuration(shortAnimTime).alpha(
+                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mListView.setVisibility(show ? View.GONE : View.VISIBLE);
+                }
+            });
+
+            mView.setVisibility(show ? View.GONE : View.VISIBLE);
+            mView.animate().setDuration(shortAnimTime).alpha(
+                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mView.setVisibility(show ? View.GONE : View.VISIBLE);
+                }
+            });
+
+            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            mProgressView.animate().setDuration(shortAnimTime).alpha(
+                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+                }
+            });
+        } else {
+            // The ViewPropertyAnimator APIs are not available, so simply show
+            // and hide the relevant UI components.
+            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            mListView.setVisibility(show ? View.GONE : View.VISIBLE);
+            mView.setVisibility(show ? View.GONE : View.VISIBLE);
+        }
     }
 }

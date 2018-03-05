@@ -15,6 +15,8 @@ public class Shelter implements Serializable {
     private String address;
     private String specialNotes;
     private String phoneNumber;
+    private AgeCategories ageCategory;
+    private GenderCategories genderCategory;
 
 
     public Shelter() {
@@ -57,7 +59,13 @@ public class Shelter implements Serializable {
         return phoneNumber;
     }
 
-    public Shelter(String id, String name, String capacity, String restrictions, double longitude, double latitude, String address, String specialNotes, String phoneNumber) {
+    public AgeCategories getAgeCategory() { return ageCategory; }
+
+    public GenderCategories getGenderCategory() { return genderCategory; }
+
+    public Shelter(String id, String name, String capacity, String restrictions, double longitude,
+                   double latitude, String address, String specialNotes, String phoneNumber,
+                   AgeCategories ageCategory, GenderCategories genderCategory) {
         this.id = id;
         this.name = name;
         this.capacity = capacity;
@@ -67,5 +75,7 @@ public class Shelter implements Serializable {
         this.address = address;
         this.specialNotes = specialNotes;
         this.phoneNumber = phoneNumber;
+        this.ageCategory = ageCategory;
+        this.genderCategory = genderCategory;
     }
 }
