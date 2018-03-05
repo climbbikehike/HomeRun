@@ -77,7 +77,7 @@ public class UtilityMethods {
                         row[3], Double.parseDouble(row[4]), Double.parseDouble(row[5]), row[6],
                         row[7], row[8], AgeCategories.valueOf(row[9]), GenderCategories.valueOf(row[10]));
                 FirebaseDatabase.getInstance().getReference()
-                        .child(FirebaseWrapper.DATABASE_SHELTERS)
+                        .child(FirebaseConstants.DATABASE_SHELTERS)
                         .child(shelter.getId())
                         .setValue(shelter);
             }

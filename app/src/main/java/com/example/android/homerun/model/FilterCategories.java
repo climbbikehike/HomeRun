@@ -4,13 +4,12 @@ package com.example.android.homerun.model;
  * Created by PC on 3/4/18.
  */
 
-public enum AgeCategories {
-    FAMILIES_WITH_NEWBORNS ("Families with newborns"), CHILDREN ("Children"),
-    YOUNG_ADULTS ("Young adults"), ANYONE ("Anyone");
+public enum FilterCategories {
+    NAME ("Name"), GENDER ("Gender"), AGE("Age");
 
     private String type;
 
-    AgeCategories(String s) {
+    FilterCategories(String s) {
         type = s;
     }
 

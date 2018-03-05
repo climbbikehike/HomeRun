@@ -10,7 +10,8 @@ import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import com.example.android.homerun.R;
-import com.example.android.homerun.model.FirebaseWrapper;
+import com.example.android.homerun.model.FirebaseConstants;
+import com.example.android.homerun.model.FilterCategories;
 import com.example.android.homerun.model.Shelter;
 import com.example.android.homerun.model.UtilityMethods;
 import com.example.android.homerun.view.ShelterAdapter;
@@ -31,6 +32,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.io.InputStream;
@@ -41,6 +43,8 @@ public class DashboardActivity extends AppCompatActivity {
     private View mProgressView;
     private ListView mListView;
     private EditText mEditTextView;
+    private Spinner mFilterCategories;
+    private View mView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,13 +55,16 @@ public class DashboardActivity extends AppCompatActivity {
 
         mProgressView = findViewById(R.id.dashboard_progress);
         mListView = (ListView) findViewById(R.id.shelter_list);
-        mEditTextView = (EditText) findViewById(R.id.shelter_search);
+        mEditTextView = (EditText) findViewById(R.id.filter_string);
+        mFilterCategories = (Spinner) findViewById(R.id.filter_category_spinner);
+        mView = findViewById(R.id.filter_layout);
 
-        final Toast mToastToShow = Toast.makeText(getApplicationContext(),"Login successful. Fetching Data", Toast.LENGTH_LONG);
+        final Toast mToastToShow = Toast.makeText(getApplicationContext(),"Login successful. Fetching Data.", Toast.LENGTH_LONG);
         mToastToShow.show();
+        showProgress(true);
 
         DatabaseReference shelterRef = FirebaseDatabase.getInstance().getReference()
-                .child(FirebaseWrapper.DATABASE_SHELTERS);
+                .child(FirebaseConstants.DATABASE_SHELTERS);
         ValueEventListener eventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -70,7 +77,7 @@ public class DashboardActivity extends AppCompatActivity {
                     shelterList.add(shelterDataSnapshot.getValue(Shelter.class));
                 }
 
-                final ArrayAdapter<Shelter> shelterAdapter = new ShelterAdapter(DashboardActivity.this, shelterList);
+                final ShelterAdapter shelterAdapter = new ShelterAdapter(DashboardActivity.this, shelterList);
 
                 assert mListView != null;
                 mListView.setAdapter(shelterAdapter);
@@ -98,6 +105,7 @@ public class DashboardActivity extends AppCompatActivity {
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
                         // Call back the Adapter with current character to Filter
+                        shelterAdapter.setSearchCategory((FilterCategories) mFilterCategories.getSelectedItem());
                         shelterAdapter.getFilter().filter(s.toString());
                     }
 
@@ -117,6 +125,10 @@ public class DashboardActivity extends AppCompatActivity {
             }
         };
         shelterRef.addListenerForSingleValueEvent(eventListener);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter(this,android.R.layout.simple_spinner_item, FilterCategories.values());
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mFilterCategories.setAdapter(adapter);
     }
 
     @Override
@@ -174,12 +186,12 @@ public class DashboardActivity extends AppCompatActivity {
                 }
             });
 
-            mEditTextView.setVisibility(show ? View.GONE : View.VISIBLE);
-            mEditTextView.animate().setDuration(shortAnimTime).alpha(
+            mView.setVisibility(show ? View.GONE : View.VISIBLE);
+            mView.animate().setDuration(shortAnimTime).alpha(
                     show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
-                    mEditTextView.setVisibility(show ? View.GONE : View.VISIBLE);
+                    mView.setVisibility(show ? View.GONE : View.VISIBLE);
                 }
             });
 
@@ -196,7 +208,7 @@ public class DashboardActivity extends AppCompatActivity {
             // and hide the relevant UI components.
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
             mListView.setVisibility(show ? View.GONE : View.VISIBLE);
-            mEditTextView.setVisibility(show ? View.GONE : View.VISIBLE);
+            mView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
 }

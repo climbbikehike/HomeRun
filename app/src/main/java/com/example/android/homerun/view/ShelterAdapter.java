@@ -11,6 +11,7 @@ import android.widget.Filterable;
 import android.widget.TextView;
 
 import com.example.android.homerun.R;
+import com.example.android.homerun.model.FilterCategories;
 import com.example.android.homerun.model.Shelter;
 
 import java.util.ArrayList;
@@ -26,11 +27,15 @@ public class ShelterAdapter extends ArrayAdapter<Shelter> implements Filterable 
 
     private ArrayList<Shelter> arrayList;
     private ArrayList<Shelter> originalList; // Original Values
+    private FilterCategories filterCategory;
 
     public ShelterAdapter(Context context, ArrayList<Shelter> list) {
         super(context, 0, list);
         this.arrayList = list;
+        this.filterCategory = FilterCategories.NAME;
     }
+
+    public void setSearchCategory(FilterCategories searchCategory) { this.filterCategory = searchCategory;}
 
     @NonNull
     @Override
@@ -67,7 +72,7 @@ public class ShelterAdapter extends ArrayAdapter<Shelter> implements Filterable 
             @Override
             protected FilterResults performFiltering(final CharSequence constraint) {
                 final FilterResults results = new FilterResults();        // Holds the results of a filtering operation in values
-                ArrayList<Shelter> filteredArrList = new ArrayList();
+                final ArrayList<Shelter> filteredArrList = new ArrayList();
 
                 if (originalList == null) {
                     originalList = new ArrayList(arrayList); // saves the original data in mOriginalValues
@@ -86,13 +91,22 @@ public class ShelterAdapter extends ArrayAdapter<Shelter> implements Filterable 
                     results.values = originalList;
                 } else {
                     final String constraint_string = constraint.toString().toLowerCase();
-                    assert constraint_string.isEmpty() == false;
 
                     for (int i = 0; i < originalList.size(); i++) {
-                        String data = originalList.get(i).getName().toLowerCase();
-
-                        if (data.startsWith(constraint_string) ||
-                                FuzzySearch.tokenSetRatio(constraint_string, data) >= 45) {
+                        String data;
+                        switch (filterCategory) {
+                            case AGE:
+                                data = originalList.get(i).getAgeCategory().toString().toLowerCase();
+                                break;
+                            case GENDER:
+                                data = originalList.get(i).getGenderCategory().toString().toLowerCase();
+                                break;
+                            default:
+                                data = originalList.get(i).getName().toLowerCase();
+                        }
+                        if (data.contains(constraint_string) ||
+                                FuzzySearch.tokenSetRatio(constraint_string, data) >=
+                                        (filterCategory == FilterCategories.GENDER ? 90 : 45)) {
                             filteredArrList.add(originalList.get(i));
                         }
                     }
@@ -100,24 +114,38 @@ public class ShelterAdapter extends ArrayAdapter<Shelter> implements Filterable 
                     filteredArrList.sort(new Comparator<Shelter>() {
                         @Override
                         public int compare(Shelter s1, Shelter s2) {
-                            String s1_name = s1.getName().toLowerCase();
-                            String s2_name = s2.getName().toLowerCase();
+                            String s1_data;
+                            String s2_data;
 
-                            if (s1_name.startsWith(constraint_string)) {
-                                if (!s2_name.startsWith(constraint_string)) {
+                            switch (filterCategory) {
+                                case AGE:
+                                    s1_data = s1.getAgeCategory().toString().toLowerCase();
+                                    s2_data = s2.getAgeCategory().toString().toLowerCase();
+                                    break;
+                                case GENDER:
+                                    s1_data = s1.getGenderCategory().toString().toLowerCase();
+                                    s2_data = s2.getGenderCategory().toString().toLowerCase();
+                                    break;
+                                default:
+                                    s1_data = s1.getName().toLowerCase();
+                                    s2_data = s2.getName().toLowerCase();
+                            }
+
+                            if (s1_data.contains(constraint_string)) {
+                                if (!s2_data.contains(constraint_string)) {
                                     return -1;
                                 }
-                                return s1_name.compareTo(s2_name);
-                            }
-                            else if (s2_name.startsWith(constraint_string)) {
+                                return s1.getName().toLowerCase().compareTo(s2.getName().toLowerCase());
+                            } else if (s2_data.contains(constraint_string)) {
                                 return 1;
                             }
 
-                            int diff = FuzzySearch.tokenSetRatio(constraint_string, s2_name) -
-                                    FuzzySearch.tokenSetRatio(constraint_string, s1_name);
+                            int diff = FuzzySearch.tokenSetRatio(constraint_string, s2_data) -
+                                    FuzzySearch.tokenSetRatio(constraint_string, s1_data);
                             if (diff == 0) {
-                                return s1_name.compareTo(s2_name);
+                                return s1.getName().toLowerCase().compareTo(s2.getName().toLowerCase());
                             }
+
                             return diff;
                         }
                     });
